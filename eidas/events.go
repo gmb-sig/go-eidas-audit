@@ -62,8 +62,12 @@ const (
 	AttrStateRef              = "state_ref"
 	AttrSignatureFormat       = "signature_format"
 	AttrSignatureLevel        = "signature_level"
-	AttrSimpleSignRef         = "simplesign_ref"
-	AttrBLTAConfirmed         = "blta_confirmed"
+	AttrSimpleSignRef = "simplesign_ref"
+	// AttrBaselineConfirmed records that the backend confirmed the expected
+	// AdES baseline level — B-LT per the 2026-06-11 programme decision
+	// (qualified signature timestamp + embedded OCSP/CRL; archive timestamps
+	// are applied only later, by the preservation service, via /addArchive).
+	AttrBaselineConfirmed     = "baseline_confirmed"
 	AttrQualifiedTimestampRef = "qualified_timestamp_ref"
 	AttrValidationPolicy      = "validation_policy"
 	AttrReportLevel           = "report_level"
@@ -82,7 +86,10 @@ const (
 // SignatureFormat is the container/profile a signature was applied in.
 type SignatureFormat string
 
-// Signature formats supported by the platform (always B-LTA per LVRTC).
+// Signature formats supported by the platform. The signing backend produces
+// B-LT baseline signatures (see AttrBaselineConfirmed). FormatASiCE denotes a
+// XAdES signature delivered in an ASiC-E container — recorded as the
+// container-level format for consistency with the delivered artefact.
 const (
 	FormatPAdES SignatureFormat = "PAdES"
 	FormatXAdES SignatureFormat = "XAdES"

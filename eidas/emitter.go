@@ -223,13 +223,16 @@ func (e *Emitter) provider(ctx *azugo.Context, eventType string, p Provider) err
 
 // Signature is a signature-applied event.
 type Signature struct {
-	Actor                 broker.Actor
-	EnvelopeID            string
-	Slot                  string
-	Format                SignatureFormat
-	Level                 SignatureLevel
-	SimpleSignRef         string
-	BLTAConfirmed         bool
+	Actor         broker.Actor
+	EnvelopeID    string
+	Slot          string
+	Format        SignatureFormat
+	Level         SignatureLevel
+	SimpleSignRef string
+	// BaselineConfirmed records that the backend confirmed the expected AdES
+	// baseline level (B-LT — qualified signature timestamp + embedded
+	// revocation data; see AttrBaselineConfirmed).
+	BaselineConfirmed     bool
 	QualifiedTimestampRef string
 }
 
@@ -244,7 +247,7 @@ func (e *Emitter) SignatureApplied(ctx *azugo.Context, s Signature) error {
 		AttrSignatureFormat:       string(s.Format),
 		AttrSignatureLevel:        string(s.Level),
 		AttrSimpleSignRef:         s.SimpleSignRef,
-		AttrBLTAConfirmed:         s.BLTAConfirmed,
+		AttrBaselineConfirmed:     s.BaselineConfirmed,
 		AttrQualifiedTimestampRef: s.QualifiedTimestampRef,
 	})
 
@@ -416,6 +419,11 @@ func outcomeOr(o broker.Outcome) broker.Outcome {
 	return o
 }
 
+// MaxAttrValueLen is the maximum length (in runes) of a string attribute value;
+// longer values are truncated by sanitize. Attributes are lean references and
+// bounded operational metadata (e.g. a decline Reason), never narratives.
+const MaxAttrValueLen = 256
+
 // forbiddenAttrKeys are attribute-key fragments that signal "fat" cryptographic
 // or document payloads the lean Regime A store must never hold (Audit Decisions
 // D2). They are stripped defensively; typed helpers never produce them.
@@ -425,25 +433,53 @@ var forbiddenAttrKeys = []string{
 	"archive", "private_key", "signature_bytes", "pdf_bytes",
 }
 
-// sanitize drops any attribute whose key names a forbidden fat/PII payload. The
-// publisher additionally strips bearer-token-shaped keys (broker.Stamp).
+// sanitize drops any attribute whose key names a forbidden fat/PII payload and
+// truncates string values to MaxAttrValueLen runes. It never mutates the input
+// map — a sanitized copy is returned when anything must change, so caller-owned
+// maps stay intact. The publisher additionally strips bearer-token-shaped keys
+// (broker.Stamp).
 func sanitize(attrs map[string]any) map[string]any {
 	if len(attrs) == 0 {
 		return attrs
 	}
 
-	for k := range attrs {
-		lk := strings.ToLower(k)
-		for _, f := range forbiddenAttrKeys {
-			if strings.Contains(lk, f) {
-				delete(attrs, k)
+	var out map[string]any // allocated only when something changes
 
-				break
+	cow := func() {
+		if out == nil {
+			out = make(map[string]any, len(attrs))
+			for ck, cv := range attrs {
+				out[ck] = cv
 			}
 		}
 	}
 
-	return attrs
+	for k, v := range attrs {
+		lk := strings.ToLower(k)
+		for _, f := range forbiddenAttrKeys {
+			if strings.Contains(lk, f) {
+				cow()
+				delete(out, k)
+
+				break
+			}
+		}
+
+		if s, ok := v.(string); ok {
+			if r := []rune(s); len(r) > MaxAttrValueLen {
+				cow()
+				if _, kept := out[k]; kept {
+					out[k] = string(r[:MaxAttrValueLen])
+				}
+			}
+		}
+	}
+
+	if out == nil {
+		return attrs
+	}
+
+	return out
 }
 
 // compact removes nil and empty-string attribute values so events stay lean and

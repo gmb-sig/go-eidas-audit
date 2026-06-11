@@ -15,7 +15,9 @@
 // # Lean / reference-only (Audit Decisions D2)
 //
 // The portal is not a certified Qualified validation service. The cryptographic
-// evidence lives with LVRTC and inside the self-contained B-LTA file; this
+// evidence lives with LVRTC and inside the self-contained B-LT file
+// (authoritative within its validity horizon — the TSA/CA chain lifetime; LTA
+// augmentation is the preservation service's job); this
 // stream stores only the minimum needed to find and trust that evidence —
 // material-event records plus references (envelope/slot, session id, signature
 // type, at-signing validation pass/fail, qualified-timestamp presence, the S3

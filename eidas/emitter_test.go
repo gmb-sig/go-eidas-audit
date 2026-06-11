@@ -118,7 +118,7 @@ func TestSignatureApplied_KeepsBoolAndRefs(t *testing.T) {
 			Format:                eidas.FormatPAdES,
 			Level:                 eidas.LevelQES,
 			SimpleSignRef:         "ss-ref-9",
-			BLTAConfirmed:         true,
+			BaselineConfirmed:     true,
 			QualifiedTimestampRef: "tsa-ref-3",
 		})
 	})
@@ -130,7 +130,7 @@ func TestSignatureApplied_KeepsBoolAndRefs(t *testing.T) {
 	qt.Check(t, qt.Equals(ev.Operation, broker.OpSign))
 	qt.Check(t, qt.Equals(str(ev.Attributes[eidas.AttrSignatureFormat]), string(eidas.FormatPAdES)))
 
-	confirmed, ok := ev.Attributes[eidas.AttrBLTAConfirmed].(bool)
+	confirmed, ok := ev.Attributes[eidas.AttrBaselineConfirmed].(bool)
 	qt.Check(t, qt.IsTrue(ok))
 	qt.Check(t, qt.IsTrue(confirmed))
 	qt.Check(t, qt.Equals(str(ev.Attributes[eidas.AttrSimpleSignRef]), "ss-ref-9"))
