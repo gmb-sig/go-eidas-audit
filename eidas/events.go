@@ -1,6 +1,6 @@
 package eidas
 
-// Event types for Regime A material signing events (Audit Design §3, §7). These
+// Event types for eIDAS-audit material signing events (Audit Design §3, §7). These
 // are the canonical event_type values written into the hash-chain; keeping them
 // here is what makes the trail consistent across producers.
 const (

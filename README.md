@@ -1,6 +1,6 @@
 # go-eidas-audit
 
-The **Regime A** (signing & evidence) audit emitter for the eSignature Portal. A thin
+The **eIDAS-audit** (signing & evidence) audit emitter for the eSignature Portal. A thin
 library that gives every signing-event service **one correct way** to publish
 structured, schema-correct material-signing events to the broker, so the hash-chained
 trail consumed by the **Audit & Evidence Service** is consistent regardless of producer.
@@ -83,7 +83,7 @@ to `signing` and runs the same fat/PII + token sanitization before publishing.
 
 ## Events
 
-One typed helper per Regime A material event (Audit Design §3, §7):
+One typed helper per eIDAS-audit material event (Audit Design §3, §7):
 
 | Helper | `event_type` |
 |---|---|
@@ -100,9 +100,9 @@ One typed helper per Regime A material event (Audit Design §3, §7):
 | `DocumentDownloaded` | `document.downloaded` |
 | `RetentionPurge` | `retention.purge` |
 
-Regime B (GDPR access) and Regime C (NIS2 security) are **separate mechanisms** with their
+GDPR-audit (GDPR access) and NIS2-audit (NIS2 security) are **separate mechanisms** with their
 own libraries — [`go-gdpr-audit`](https://github.com/gmb-sig/go-gdpr-audit) and [`go-sec-events`](https://github.com/gmb-sig/go-sec-events).
-A service that uploads a document emits the Regime A event here *and* the corresponding
+A service that uploads a document emits the eIDAS-audit event here *and* the corresponding
 access record there; this library does not route across regimes.
 
 ## Develop

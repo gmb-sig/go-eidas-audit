@@ -1,4 +1,4 @@
-// Package eidas is the Regime A (signing & evidence) audit emitter for the
+// Package eidas is the eIDAS-audit (signing & evidence) audit emitter for the
 // eSignature Portal. It gives every signing-event service one correct way to
 // publish structured, schema-correct material-signing events to the broker, so
 // the hash-chained trail consumed by the Audit & Evidence Service is consistent
@@ -25,9 +25,9 @@
 // digests, OCSP/CRL, archive material, full validation blobs, or document bytes;
 // the emitter strips such "fat" attribute keys defensively (see sanitize).
 //
-// Regime B (GDPR personal-data access) and Regime C (NIS2 security telemetry) are
+// GDPR-audit (GDPR personal-data access) and NIS2-audit (NIS2 security telemetry) are
 // separate mechanisms with their own libraries (go-gdpr-audit, go-sec-events) —
-// a service that uploads a document emits this Regime A event *and* the
+// a service that uploads a document emits this eIDAS-audit event *and* the
 // corresponding access record, rather than overloading one event (Audit Design
 // §8, §11).
 package eidas

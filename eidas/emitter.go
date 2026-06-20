@@ -13,7 +13,7 @@ import (
 // A signing-evidence events from.
 const DefaultTopic = "audit.signing"
 
-// Emitter publishes Regime A signing-evidence events. Construct one per service
+// Emitter publishes eIDAS-audit signing-evidence events. Construct one per service
 // over the service's broker.Publisher; it is safe for concurrent use (it holds
 // no mutable state beyond the publisher, which is itself concurrency-safe).
 type Emitter struct {
@@ -55,7 +55,7 @@ func (e *Emitter) Emit(ctx *azugo.Context, ev *broker.Envelope) error {
 	return e.pub.Publish(ctx, e.topic, ev)
 }
 
-// signing builds a Regime A envelope skeleton with the given event type,
+// signing builds a eIDAS-audit envelope skeleton with the given event type,
 // operation and outcome already set.
 func signing(eventType string, op broker.Operation, outcome broker.Outcome) *broker.Envelope {
 	return &broker.Envelope{
@@ -316,7 +316,7 @@ type CoSigner struct {
 	Actor          broker.Actor
 	EnvelopeID     string
 	Slot           string
-	InvitedSubject string // the invited party — drives Regime B indexing
+	InvitedSubject string // the invited party — drives GDPR-audit indexing
 }
 
 // CoSignerInvited records the moment one party's action causes processing of
@@ -425,7 +425,7 @@ func outcomeOr(o broker.Outcome) broker.Outcome {
 const MaxAttrValueLen = 256
 
 // forbiddenAttrKeys are attribute-key fragments that signal "fat" cryptographic
-// or document payloads the lean Regime A store must never hold (Audit Decisions
+// or document payloads the lean eIDAS-audit store must never hold (Audit Decisions
 // D2). They are stripped defensively; typed helpers never produce them.
 var forbiddenAttrKeys = []string{
 	"certificate", "cert_", "ocsp", "crl", "digest",
