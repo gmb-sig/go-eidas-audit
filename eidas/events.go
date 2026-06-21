@@ -1,6 +1,6 @@
 package eidas
 
-// Event types for Regime A material signing events (Audit Design §3, §7). These
+// Event types for eIDAS-audit material signing events. These
 // are the canonical event_type values written into the hash-chain; keeping them
 // here is what makes the trail consistent across producers.
 const (
@@ -33,7 +33,7 @@ const (
 	// downloaded.
 	EventDocumentDownloaded = "document.downloaded"
 	// EventRetentionPurge — a retention sweep deleted material; the fact of
-	// deletion is itself retained (Audit Design §9).
+	// deletion is itself retained.
 	EventRetentionPurge = "retention.purge"
 )
 
@@ -45,28 +45,28 @@ const (
 )
 
 // Attribute keys. Defined as constants so every producer writes the same shape
-// into the chain; values are lean references only (Audit Decisions D2).
+// into the chain; values are lean references only.
 const (
-	AttrContentHash           = "content_hash"
-	AttrMIME                  = "mime"
-	AttrSize                  = "size"
-	AttrSlot                  = "slot"
-	AttrDocumentHash          = "document_hash"
-	AttrMethod                = "method"
-	AttrLevelOfAssurance      = "loa"
-	AttrBindingOutcome        = "binding_outcome"
-	AttrStepUp                = "step_up"
-	AttrInputType             = "input_type"
-	AttrSessionID             = "session_id"
-	AttrProvider              = "provider"
-	AttrStateRef              = "state_ref"
-	AttrSignatureFormat       = "signature_format"
-	AttrSignatureLevel        = "signature_level"
-	AttrSimpleSignRef = "simplesign_ref"
+	AttrContentHash      = "content_hash"
+	AttrMIME             = "mime"
+	AttrSize             = "size"
+	AttrSlot             = "slot"
+	AttrDocumentHash     = "document_hash"
+	AttrMethod           = "method"
+	AttrLevelOfAssurance = "loa"
+	AttrBindingOutcome   = "binding_outcome"
+	AttrStepUp           = "step_up"
+	AttrInputType        = "input_type"
+	AttrSessionID        = "session_id"
+	AttrProvider         = "provider"
+	AttrStateRef         = "state_ref"
+	AttrSignatureFormat  = "signature_format"
+	AttrSignatureLevel   = "signature_level"
+	AttrSimpleSignRef    = "simplesign_ref"
 	// AttrBaselineConfirmed records that the backend confirmed the expected
-	// AdES baseline level — B-LT per the 2026-06-11 programme decision
-	// (qualified signature timestamp + embedded OCSP/CRL; archive timestamps
-	// are applied only later, by the preservation service, via /addArchive).
+	// AdES baseline level — B-LT (qualified signature timestamp + embedded
+	// OCSP/CRL; archive timestamps are applied only later, by the preservation
+	// service, via /addArchive).
 	AttrBaselineConfirmed     = "baseline_confirmed"
 	AttrQualifiedTimestampRef = "qualified_timestamp_ref"
 	AttrValidationPolicy      = "validation_policy"
@@ -109,7 +109,7 @@ const (
 // ValidationPolicy selects the validation profile used for a report.
 type ValidationPolicy string
 
-// Validation policies (Audit Design §3 / BR-AUD-4).
+// Validation policies.
 const (
 	PolicyLV     ValidationPolicy = "lv"
 	PolicyEU     ValidationPolicy = "eu"

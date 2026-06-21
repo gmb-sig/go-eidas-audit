@@ -10,8 +10,8 @@ import (
 	"github.com/go-quicktest/qt"
 	"github.com/valyala/fasthttp"
 
+	"github.com/gmb-lib/go-platform-kit/broker"
 	"github.com/gmb-sig/go-eidas-audit/eidas"
-	"github.com/gmb-sig/go-platform-kit/broker"
 )
 
 // captureTransport records every published message for assertion.

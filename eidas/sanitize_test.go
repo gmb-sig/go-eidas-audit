@@ -7,8 +7,8 @@ import (
 	"azugo.io/azugo"
 	"github.com/go-quicktest/qt"
 
+	"github.com/gmb-lib/go-platform-kit/broker"
 	"github.com/gmb-sig/go-eidas-audit/eidas"
-	"github.com/gmb-sig/go-platform-kit/broker"
 )
 
 func TestEmit_CapsLongValuesAndKeepsCallerMapIntact(t *testing.T) {
@@ -17,9 +17,9 @@ func TestEmit_CapsLongValuesAndKeepsCallerMapIntact(t *testing.T) {
 
 	long := strings.Repeat("x", 4*eidas.MaxAttrValueLen)
 	caller := map[string]any{
-		eidas.AttrReason: long,       // must be truncated on the event…
-		"certificate":    "MIIC...",  // fat key — must be stripped on the event…
-		eidas.AttrSlot:   "slot-1",   // safe — must survive
+		eidas.AttrReason: long,      // must be truncated on the event…
+		"certificate":    "MIIC...", // fat key — must be stripped on the event…
+		eidas.AttrSlot:   "slot-1",  // safe — must survive
 	}
 
 	withCtx(t, func(ctx *azugo.Context) {

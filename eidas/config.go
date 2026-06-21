@@ -5,12 +5,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Configuration is the (small) Regime A emitter configuration, bound as a
+// Configuration is the (small) eIDAS-audit emitter configuration, bound as a
 // sub-configuration of a consuming service. Only the broker topic is
 // configurable; the broker connection itself is owned by go-platform-kit's
 // config.Broker. Most services can rely on the default and skip this.
 type Configuration struct {
-	// Topic is the broker topic Regime A signing-evidence events are published
+	// Topic is the broker topic eIDAS-audit signing-evidence events are published
 	// to (env EIDAS_AUDIT_TOPIC). Defaults to DefaultTopic.
 	Topic string `mapstructure:"topic" validate:"required"`
 }

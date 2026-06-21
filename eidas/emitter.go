@@ -6,14 +6,14 @@ import (
 
 	"azugo.io/azugo"
 
-	"github.com/gmb-sig/go-platform-kit/broker"
+	"github.com/gmb-lib/go-platform-kit/broker"
 )
 
-// DefaultTopic is the broker topic the Audit & Evidence Service consumes Regime
-// A signing-evidence events from.
+// DefaultTopic is the broker topic the audit/evidence sink consumes eIDAS-audit
+// signing-evidence events from.
 const DefaultTopic = "audit.signing"
 
-// Emitter publishes Regime A signing-evidence events. Construct one per service
+// Emitter publishes eIDAS-audit signing-evidence events. Construct one per service
 // over the service's broker.Publisher; it is safe for concurrent use (it holds
 // no mutable state beyond the publisher, which is itself concurrency-safe).
 type Emitter struct {
@@ -55,7 +55,7 @@ func (e *Emitter) Emit(ctx *azugo.Context, ev *broker.Envelope) error {
 	return e.pub.Publish(ctx, e.topic, ev)
 }
 
-// signing builds a Regime A envelope skeleton with the given event type,
+// signing builds a eIDAS-audit envelope skeleton with the given event type,
 // operation and outcome already set.
 func signing(eventType string, op broker.Operation, outcome broker.Outcome) *broker.Envelope {
 	return &broker.Envelope{
@@ -316,7 +316,7 @@ type CoSigner struct {
 	Actor          broker.Actor
 	EnvelopeID     string
 	Slot           string
-	InvitedSubject string // the invited party — drives Regime B indexing
+	InvitedSubject string // the invited party — drives GDPR-audit indexing
 }
 
 // CoSignerInvited records the moment one party's action causes processing of
@@ -369,7 +369,7 @@ type Purge struct {
 }
 
 // RetentionPurge records a retention sweep deleting material; the fact of
-// deletion is itself retained (Audit Design §9).
+// deletion is itself retained.
 func (e *Emitter) RetentionPurge(ctx *azugo.Context, p Purge) error {
 	ev := signing(EventRetentionPurge, broker.OpDelete, broker.OutcomeSuccess)
 	ev.Actor = actor(p.Actor)
@@ -425,8 +425,8 @@ func outcomeOr(o broker.Outcome) broker.Outcome {
 const MaxAttrValueLen = 256
 
 // forbiddenAttrKeys are attribute-key fragments that signal "fat" cryptographic
-// or document payloads the lean Regime A store must never hold (Audit Decisions
-// D2). They are stripped defensively; typed helpers never produce them.
+// or document payloads the lean eIDAS-audit store must never hold. They are
+// stripped defensively; typed helpers never produce them.
 var forbiddenAttrKeys = []string{
 	"certificate", "cert_", "ocsp", "crl", "digest",
 	"document_bytes", "content_bytes", "file_bytes", "validation_blob",
