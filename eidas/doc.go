@@ -1,18 +1,17 @@
-// Package eidas is the eIDAS-audit (signing & evidence) audit emitter for the
-// eSignature Portal. It gives every signing-event service one correct way to
+// Package eidas is the eIDAS-audit (signing & evidence) audit emitter for eIDAS
+// signing services. It gives every signing-event service one correct way to
 // publish structured, schema-correct material-signing events to the broker, so
-// the hash-chained trail consumed by the Audit & Evidence Service is consistent
-// regardless of which service produced the event (Audit Design §3, §8.1;
-// Services Catalog §3.9.4).
+// the hash-chained trail consumed by the audit/evidence sink is consistent
+// regardless of which service produced the event.
 //
 // It is a thin layer over go-platform-kit's broker: every event is the frozen
-// §8.1 broker.Envelope, tagged broker.CategorySigning, stamped with a ULID event
+// broker.Envelope, tagged broker.CategorySigning, stamped with a ULID event
 // id, a high-precision occurrence time, and the request's correlation/trace ids
 // (broker.Publish handles stamping + validation), then published to the signing
 // topic over the broker's TLS + per-topic ACLs. Async is fine here — integrity,
-// not latency, is the priority (Audit Design §8).
+// not latency, is the priority.
 //
-// # Lean / reference-only (Audit Decisions D2)
+// # Lean / reference-only
 //
 // The portal is not a certified Qualified validation service. The cryptographic
 // evidence lives with LVRTC and inside the self-contained B-LT file
@@ -28,6 +27,5 @@
 // GDPR-audit (GDPR personal-data access) and NIS2-audit (NIS2 security telemetry) are
 // separate mechanisms with their own libraries (go-gdpr-audit, go-sec-events) —
 // a service that uploads a document emits this eIDAS-audit event *and* the
-// corresponding access record, rather than overloading one event (Audit Design
-// §8, §11).
+// corresponding access record, rather than overloading one event.
 package eidas
