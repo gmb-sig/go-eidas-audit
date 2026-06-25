@@ -1,5 +1,11 @@
 # go-eidas-audit
 
+---
+
+Deprecated: moved to github.com/gmb-lib/go-eidas-audit. Update imports to the new path.
+
+---
+
 The **eIDAS-audit** (signing & evidence) audit emitter for eIDAS signing services. A thin
 library that gives every signing-event service **one correct way** to publish
 structured, schema-correct material-signing events to the broker, so the hash-chained
